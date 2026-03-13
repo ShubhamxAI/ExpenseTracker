@@ -10,8 +10,8 @@ Tracked example file:
 
 ```javascript
 const STARTER_CONFIG = {
-  greetingMessage: "Hello from ExpenseTracker",
-  baselineLabel: "Starter Baseline",
+  greetingMessage: 'Hello from ExpenseTracker',
+  baselineLabel: 'Starter Baseline',
 };
 
 export default STARTER_CONFIG;
@@ -19,7 +19,7 @@ export default STARTER_CONFIG;
 
 Local override file:
 
-- Path: `src/config/starterConfig.local.js`
+- Path: `src/config/starterConfig.js`
 - Shape: default export of an object with `greetingMessage` and `baselineLabel`
 - Key rules:
   - Keys use `camelCase`
@@ -32,8 +32,8 @@ Local override file:
 When the app reaches the first visible screen, it must render all of the following without network access:
 
 - Product name: `ExpenseTracker`
-- Greeting text: value from `starterConfig.local.js.greetingMessage`
-- Starter state label: value from `starterConfig.local.js.baselineLabel`
+- Greeting text: value from `starterConfig.js.greetingMessage`
+- Starter state label: value from `starterConfig.js.baselineLabel`
 - Theme styling from the shared starter theme module
 - Heroicons-only iconography where an icon is used
 

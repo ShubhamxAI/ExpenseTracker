@@ -7,6 +7,7 @@ local.properties
 
 # Log/OS Files
 *.log
+.expo/
 
 # Android Studio generated files and folders
 captures/
@@ -32,3 +33,7 @@ google-services.json
 
 # Android Profiling
 *.hprof
+node_modules
+
+# Starter local overrides
+src/config/starterConfig.js

@@ -3,7 +3,7 @@
 ## Entity: StarterConfiguration
 
 - Purpose: Local pre-launch values that drive the visible starter greeting and baseline label.
-- Source: `src/config/starterConfig.local.js`, created from a tracked example file.
+- Source: `src/config/starterConfig.js`, created from a tracked example file.
 - Fields:
   - `greetingMessage`: string, required, non-empty, visible on first screen.
   - `baselineLabel`: string, required, non-empty, visible on first screen.

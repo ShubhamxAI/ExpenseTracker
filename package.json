@@ -1,0 +1,57 @@
+{
+  "name": "expense-tracker",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.js",
+  "packageManager": "yarn@1.22.22",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "starter:check": "node scripts/validate-starter-setup.mjs check",
+    "starter:start": "node scripts/validate-starter-setup.mjs start && expo start",
+    "starter:android": "node scripts/validate-starter-setup.mjs android && expo start --android",
+    "starter:apk": "node scripts/validate-starter-setup.mjs apk && cd android && ./gradlew assembleDebug",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "typecheck": "node -e \"console.log('No static typecheck configured for JavaScript starter');\"",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.6.1",
+    "expo": "^55.0.6",
+    "expo-asset": "~55.0.8",
+    "metro-config": "^0.81.1",
+    "react": "19.2.0",
+    "react-native": "0.83.2",
+    "react-native-heroicons": "^4.0.0",
+    "react-native-svg": "15.15.3",
+    "react-redux": "^9.2.0",
+    "redux": "^5.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.10",
+    "@babel/preset-env": "^7.26.9",
+    "@react-native/babel-preset": "0.76.7",
+    "@react-native/eslint-config": "0.76.7",
+    "@react-native/metro-config": "0.76.7",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-import-resolver-node": "^0.3.9",
+    "eslint-plugin-import": "^2.31.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
+    "prettier": "^3.5.3"
+  },
+  "lint-staged": {
+    "*.{js,json,md}": [
+      "prettier --write"
+    ],
+    "*.js": [
+      "eslint --fix"
+    ]
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

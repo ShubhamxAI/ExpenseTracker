@@ -85,14 +85,14 @@ src/
 │   └── store.js
 ├── config/
 │   ├── starterConfig.example.js
-│   └── starterConfig.local.js
+│   └── starterConfig.js
 ├── constants/
 │   └── starterDisplay.js
 └── utils/
     └── loadStarterConfig.js
 
 scripts/
-└── validate-starter-setup.js
+└── validate-starter-setup.mjs
 
 __tests__/
 └── starter-screen.test.js
@@ -105,7 +105,7 @@ __tests__/
 ### Phase 0: Research and Decisions
 
 - Confirm the bootstrap path is React Native CLI with JavaScript rather than Expo or TypeScript, because the constitution names React Native (JavaScript) and the requested deliverable is a local Android demo plus debug-installable artifact.
-- Define the local override contract as an ignored `starterConfig.local.js` copied from a tracked example file so maintainers can change greeting and starter label without editing app logic.
+- Define the local override contract as an ignored `starterConfig.js` copied from a tracked example file so maintainers can change greeting and starter label without editing app logic.
 - Define preflight validation as a required wrapper step before `start`, `android`, and APK generation so missing config or Android SDK/device prerequisites fail with recovery guidance instead of opaque Gradle errors.
 - Define the shared visual theme as a centralized React Native theme module with dark purple high-contrast tokens and a sophisticated old-money tone, and use Heroicons explicitly for all starter iconography.
 
@@ -119,7 +119,7 @@ __tests__/
 
 1. Bootstrap the React Native project and Android buildable baseline at repo root.
 2. Add repo-quality scaffolding required by the constitution: Prettier, ESLint Airbnb, Husky, lint-staged, and absolute-import configuration where practical.
-3. Add `starterConfig.example.js`, ignore `starterConfig.local.js`, and implement a validation script plus npm/yarn wrapper commands that stop early with actionable setup errors.
+3. Add `starterConfig.example.js`, ignore `starterConfig.js`, and implement an ESM validation script plus npm/yarn wrapper commands that stop early with actionable setup errors.
 4. Implement a single starter screen backed by a minimal Redux slice that surfaces `ExpenseTracker`, greeting text, and a visible starter or baseline label without any network or data access, and style it through a shared theme with explicit Heroicons usage.
 5. Add smoke tests, quickstart/docs updates, and manual verification steps for emulator/device launch and debug APK retrieval.
 

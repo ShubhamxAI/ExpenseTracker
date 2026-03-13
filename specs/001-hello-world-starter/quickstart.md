@@ -13,22 +13,22 @@ Move from a clean checkout to a running local Android demo and a debug-installab
 
 ## Local Setup
 
-1. Install JavaScript dependencies.
-2. Copy `src/config/starterConfig.example.js` to `src/config/starterConfig.local.js`.
+1. Install JavaScript dependencies with `yarn`.
+2. Copy `src/config/starterConfig.example.js` to `src/config/starterConfig.js` if the local config file is not already present.
 3. Edit `greetingMessage` and `baselineLabel` in the local config file if you want to override the defaults before launch.
 4. Start an Android emulator or connect a physical Android device.
 
 ## Run the Starter
 
-1. Run the starter preflight check.
-2. Start Metro.
-3. Launch the Android app in debug mode.
+1. Run the starter preflight check with `yarn starter:check`.
+2. Start Metro with `yarn starter:start`.
+3. Launch the Android app in debug mode with `yarn starter:android`.
 4. Confirm the first screen shows:
    - `ExpenseTracker`
    - the configured greeting message
    - the configured starter or baseline label
    - a shared dark purple high-contrast theme with a sophisticated old-money tone
-   - Heroicons-only iconography if any icons are shown
+   - Heroicons-only iconography, including the starter shield icon
 
 ## Build the Debug-Installable Artifact
 
@@ -38,7 +38,7 @@ Move from a clean checkout to a running local Android demo and a debug-installab
 
 ## Expected Failure Behavior
 
-- If `starterConfig.local.js` is missing, the validation step must fail with a message explaining how to copy the example config and edit the visible text values.
+- If `starterConfig.js` is missing, the validation step must fail with a message explaining how to copy the example config and edit the visible text values.
 - If the Android SDK is missing or not configured, the validation step must fail with a message explaining which environment variable or Android Studio setup step is missing.
 - If no emulator or device is available, the validation step must fail with instructions to boot an emulator or connect a device before retrying.
 

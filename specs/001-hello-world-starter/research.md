@@ -8,13 +8,13 @@
 
 ## Decision 2: Use a local ignored config module for visible text overrides
 
-- Decision: Track `src/config/starterConfig.example.js` and require maintainers to create or edit `src/config/starterConfig.local.js` before launch for `greetingMessage` and `baselineLabel` overrides.
+- Decision: Track `src/config/starterConfig.example.js` and require maintainers to create or edit `src/config/starterConfig.js` before launch for `greetingMessage` and `baselineLabel` overrides.
 - Rationale: The requirement is to override visible starter text by editing a local config value before launch. A local module keeps the override explicit, offline, low-risk, and easy to validate without introducing environment-variable tooling for non-secret strings.
 - Alternatives considered: `.env` values were rejected for the starter label and greeting because they are not secrets and would add extra React Native environment plumbing in the first slice. Remote config was rejected because the starter must work offline and must not depend on network services.
 
 ## Decision 3: Add a preflight validation script ahead of Android run/build commands
 
-- Decision: Provide a Node-based `scripts/validate-starter-setup.js` and wrapper commands such as `npm run starter:check`, `npm run android`, and `npm run starter:apk` that fail fast when local config, Android SDK, or device/emulator prerequisites are missing.
+- Decision: Provide a Node-based ESM script at `scripts/validate-starter-setup.mjs` and Yarn wrapper commands such as `yarn starter:check`, `yarn android`, and `yarn starter:apk` that fail fast when local config, Android SDK, or device/emulator prerequisites are missing.
 - Rationale: The spec requires clear build or run errors with recovery steps. Native Gradle or adb failures are often too opaque for a first-slice maintainer experience, so preflight validation gives deterministic error messages and next actions.
 - Alternatives considered: Relying only on raw Gradle or Metro errors was rejected because it would not satisfy the clarity requirement. A custom shell-only script was rejected because a Node script is more portable within a JavaScript React Native project and easier to test.
 

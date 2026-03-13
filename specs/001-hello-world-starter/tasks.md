@@ -1,5 +1,5 @@
 ---
-description: "Implementation tasks for the Hello World Starter feature"
+description: 'Implementation tasks for the Hello World Starter feature'
 ---
 
 # Tasks: Hello World Starter
@@ -15,12 +15,12 @@ description: "Implementation tasks for the Hello World Starter feature"
 
 **Purpose**: Bootstrap the Android-first React Native starter and repository quality tooling.
 
-- [ ] T001 Bootstrap the React Native project manifest and root scripts in package.json
-- [ ] T002 Create the React Native app entry files in index.js and app.json
-- [ ] T003 [P] Configure Babel and Metro for the starter app in babel.config.js and metro.config.js
-- [ ] T003A [P] Add the Heroicons dependency and shared theme wiring in package.json and src/theme/appTheme.js
-- [ ] T004 [P] Configure formatting and linting rules in .prettierrc.js and .eslintrc.js
-- [ ] T005 Configure Husky and lint-staged quality gates in .husky/pre-commit and package.json
+- [x] T001 Bootstrap the React Native project manifest and root scripts in package.json
+- [x] T002 Create the React Native app entry files in index.js and app.json
+- [x] T003 [P] Configure Babel and Metro for the starter app in babel.config.js and metro.config.js
+- [x] T003A [P] Add the Heroicons dependency and shared theme wiring in package.json and src/theme/appTheme.js
+- [x] T004 [P] Configure formatting and linting rules in .prettierrc.js and .eslintrc.js
+- [x] T005 Configure Husky and lint-staged quality gates in .husky/pre-commit and package.json
 
 ---
 
@@ -38,7 +38,7 @@ description: "Implementation tasks for the Hello World Starter feature"
 - [ ] T010 [P] Implement the Redux store shell in src/redux/store.js
 - [ ] T011 [P] Add the starter feature state slice in src/features/starter/starterSlice.js
 - [ ] T012 [P] Add starter feature selectors in src/features/starter/starterSelectors.js
-- [ ] T013 Implement deterministic preflight validation and failure codes in scripts/validate-starter-setup.js
+- [ ] T013 Implement deterministic preflight validation and failure codes in scripts/validate-starter-setup.mjs
 - [ ] T014 Wire preflight, Android run, and APK build commands into package.json
 
 **Checkpoint**: Foundation ready. User stories can now proceed in priority order.
@@ -72,7 +72,7 @@ description: "Implementation tasks for the Hello World Starter feature"
 
 ### Implementation for User Story 2
 
-- [ ] T020 [US2] Expand preflight checks for Android SDK, device availability, and blocked-command recovery guidance in scripts/validate-starter-setup.js
+- [ ] T020 [US2] Expand preflight checks for Android SDK, device availability, and blocked-command recovery guidance in scripts/validate-starter-setup.mjs
 - [ ] T021 [US2] Add the Android debug APK generation command and artifact path handling in package.json
 - [ ] T022 [P] [US2] Document the emulator or device demo flow and APK retrieval steps in specs/001-hello-world-starter/quickstart.md
 - [ ] T023 [P] [US2] Align the failure and artifact contract details with implementation in specs/001-hello-world-starter/contracts/starter-experience.md
