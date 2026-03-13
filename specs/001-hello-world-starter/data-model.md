@@ -23,14 +23,36 @@
   - `productName`: constant string, fixed to `ExpenseTracker`.
   - `greetingMessage`: string, loaded from `StarterConfiguration`.
   - `baselineLabel`: string, loaded from `StarterConfiguration`.
+  - `heroIconName`: string, required, references an approved Heroicons glyph.
   - `isOfflineCapable`: boolean, always `true` for this slice.
   - `buildVariant`: enum-like string, expected value `debug` for this feature.
 - Validation rules:
   - `productName` must remain unchanged in this slice.
   - `greetingMessage` and `baselineLabel` must both be visible on smaller Android screens without scrolling assumptions where practical.
+  - `heroIconName` must come from Heroicons only.
   - Rendering must not depend on network requests or persisted local data.
 - Relationships:
   - Depends on one `StarterConfiguration`.
+  - Depends on one `StarterTheme`.
+
+## Entity: StarterTheme
+
+- Purpose: Shared visual tokens that give the first screen a dark purple high-contrast appearance with a sophisticated old-money tone.
+- Source: `src/theme/appTheme.js`.
+- Fields:
+  - `backgroundColor`: string, required.
+  - `surfaceColor`: string, required.
+  - `primaryTextColor`: string, required.
+  - `accentColor`: string, required.
+  - `mutedAccentColor`: string, required.
+  - `iconSet`: constant string, fixed to `Heroicons`.
+- Validation rules:
+  - Text and surface combinations must remain visually high contrast.
+  - Purple tones must be applied through the shared theme rather than screen-local overrides.
+  - `iconSet` must remain `Heroicons` for this slice.
+- State transitions:
+  - `defined` -> `applied to starter screen`
+  - `applied to starter screen` -> `validated in demo`
 
 ## Entity: DemoReadiness
 

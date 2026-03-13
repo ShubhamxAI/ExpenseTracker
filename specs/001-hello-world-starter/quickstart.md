@@ -27,6 +27,8 @@ Move from a clean checkout to a running local Android demo and a debug-installab
    - `ExpenseTracker`
    - the configured greeting message
    - the configured starter or baseline label
+   - a shared dark purple high-contrast theme with a sophisticated old-money tone
+   - Heroicons-only iconography if any icons are shown
 
 ## Build the Debug-Installable Artifact
 
@@ -46,4 +48,6 @@ Move from a clean checkout to a running local Android demo and a debug-installab
 - The first visible screen clearly identifies `ExpenseTracker`.
 - The first visible screen clearly shows a starter or baseline label.
 - Editing the local config changes the visible greeting or label on next launch.
+- The first visible screen uses the shared dark purple theme consistently rather than screen-local colors.
+- Any icons shown on the first screen come only from Heroicons.
 - A debug-installable APK is generated at the documented path.

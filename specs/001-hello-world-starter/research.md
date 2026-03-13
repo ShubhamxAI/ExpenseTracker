@@ -29,3 +29,9 @@
 - Decision: Create a minimal starter slice in Redux Toolkit to hold the loaded display values and keep the app aligned with the constitution's React Native + Redux baseline.
 - Rationale: This preserves the intended project architecture without expanding scope into real business state. It also gives subsequent task generation a stable place to evolve the app shell.
 - Alternatives considered: A pure component-local state implementation was rejected because it would immediately diverge from the mandated architecture baseline. A larger domain-state setup was rejected because it would add unnecessary complexity before any expense-tracking logic exists.
+
+## Decision 6: Use a centralized React Native theme and Heroicons-only iconography
+
+- Decision: Keep the Android-first React Native plan, define a shared `src/theme/appTheme.js` module for dark purple high-contrast styling with a sophisticated old-money tone, and use `react-native-heroicons` as the only icon set.
+- Rationale: The requested visual direction can be expressed cleanly in React Native through a centralized theme without changing the project target. MUI cannot be used directly in a React Native Android app, so the equivalent implementation is a shared theme system rather than a web-only component library.
+- Alternatives considered: Switching the feature to a web React + MUI stack was rejected because the user chose to keep the Android React Native direction. Ad hoc inline screen styling was rejected because it would undermine consistency and make the visual direction harder to preserve as the product grows.

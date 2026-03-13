@@ -14,6 +14,7 @@
 - Q: How should maintainers override the greeting and baseline label in the first slice? → A: By editing a local config value before launch.
 - Q: What deliverable is required to satisfy “deploy and show” in the first slice? → A: A running local demo and a debug-installable artifact.
 - Q: How should missing setup be surfaced in the first slice? → A: As a clear build or run error with recovery steps.
+- Q: How should the starter look and what icon system should it use? → A: Keep React Native Android, use a centralized dark purple high-contrast theme with a sophisticated old-money feel, and use Heroicons explicitly as the only icon set.
 
 ## User Scenarios & Testing _(mandatory)_
 
@@ -30,6 +31,7 @@ As a project owner, I want the repository to launch into a simple hello-world ex
 1. **Given** a clean local setup, **When** the maintainer starts the app, **Then** the first visible screen shows a hello-world message and confirms the app is running.
 2. **Given** the device or runtime is offline, **When** the app is opened, **Then** the hello-world screen still loads and remains usable.
 3. **Given** a required setup step is missing, **When** the maintainer attempts to build or run the starter, **Then** the system fails with a clear error and recovery steps.
+4. **Given** the starter screen is rendered, **When** a reviewer sees the first screen, **Then** the screen uses the shared dark purple high-contrast theme and only Heroicons for any iconography.
 
 ---
 
@@ -67,6 +69,7 @@ As a maintainer, I want the starter feature to remain minimal and reversible so 
 - The demo environment is available but has no prior cached state or user data.
 - The startup process fails because a required local configuration step was skipped before launch or artifact creation, and the maintainer must be given a clear build or run error with recovery steps.
 - A reviewer opens the demo on a smaller screen and still needs to recognize both the ExpenseTracker name and the starter or baseline label.
+- The dark theme must keep text legible and maintain high contrast on smaller Android screens.
 
 ### Constitution Alignment _(mandatory)_
 
@@ -81,6 +84,7 @@ As a maintainer, I want the starter feature to remain minimal and reversible so 
 - Secret management constraints are explicit: no hard-coded secrets; any environment-specific values must come from approved environment configuration.
 - Scope boundaries are explicit: this feature excludes SMS parsing, transaction storage, categorization, budgeting, and goal tracking.
 - Incremental delivery is explicit: this feature is the first runnable checkpoint and must remain demonstrable on its own with a running local demo and a debug-installable artifact.
+- Visual consistency is explicit: the starter must use a shared theme definition rather than screen-local styling drift, and any icons must come from Heroicons only.
 - Repository search/discovery was used before drafting the spec to confirm current repo contents and governance files.
 
 ## Requirements _(mandatory)_
@@ -102,12 +106,15 @@ As a maintainer, I want the starter feature to remain minimal and reversible so 
 - **FR-013**: The system MUST define this work as an incremental implementation slice with a stable runnable checkpoint that future features can build upon.
 - **FR-014**: The system MUST define scope-control rules that limit work to the starter experience and prevent unrelated product features or refactors from being bundled into this change.
 - **FR-015**: The system MUST bind the feature spec, plan, and task artifacts to the uniquely numbered feature branch whose name exactly matches the `/specs/` directory used for this work.
+- **FR-016**: The system MUST render the starter experience using a centralized shared theme with dark purple high-contrast styling and a sophisticated old-money visual direction rather than ad hoc per-screen colors.
+- **FR-017**: The system MUST use Heroicons explicitly as the only icon set introduced in this feature slice.
 
 ### Key Entities _(include if feature involves data)_
 
 - **Starter Experience**: The initial visible product state containing the hello-world message, the ExpenseTracker product name, and a visible starter or baseline label.
 - **Demo Path**: The documented sequence a maintainer follows to launch or present the starter experience from a clean checkout on a local Android emulator or Android device, including creation or access to a debug-installable artifact.
 - **Starter Configuration**: Minimal local configuration values that maintainers can edit before launch to control the greeting, starter or baseline label, or demo readiness without storing user data.
+- **Starter Theme**: The centralized style definition that controls the dark purple palette, contrast levels, typography tone, spacing, and approved Heroicons usage for the first-screen experience.
 
 ## Success Criteria _(mandatory)_
 
@@ -118,6 +125,7 @@ As a maintainer, I want the starter feature to remain minimal and reversible so 
 - **SC-003**: 100% of baseline demonstrations succeed without requiring internet access after local setup is complete.
 - **SC-004**: 100% of review sessions can identify the build as ExpenseTracker and recognize it as an initial starter or baseline build from the first screen.
 - **SC-005**: The starter feature introduces zero collection or persistence of personal or financial data.
+- **SC-006**: 100% of first-screen reviews confirm the starter uses the shared dark purple theme consistently and uses no non-Heroicons iconography.
 
 ## Assumptions
 

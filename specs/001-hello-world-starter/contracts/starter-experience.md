@@ -34,10 +34,14 @@ When the app reaches the first visible screen, it must render all of the followi
 - Product name: `ExpenseTracker`
 - Greeting text: value from `starterConfig.local.js.greetingMessage`
 - Starter state label: value from `starterConfig.local.js.baselineLabel`
+- Theme styling from the shared starter theme module
+- Heroicons-only iconography where an icon is used
 
 Additional rendering rules:
 
 - The product name and starter label must remain visually distinguishable on a smaller Android screen.
+- The starter screen must use a centralized dark purple high-contrast theme with a sophisticated old-money tone.
+- Any icon rendered on the first screen must come from Heroicons only.
 - The starter screen must not trigger SMS reads, database creation, authentication, analytics, or any external API calls.
 - The screen must remain stable when the device is offline.
 

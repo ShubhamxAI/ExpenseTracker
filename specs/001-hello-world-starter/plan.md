@@ -5,19 +5,19 @@
 
 ## Summary
 
-Bootstrap an Android-first React Native starter that launches locally on an emulator or device, renders `ExpenseTracker` with a visible starter label and greeting, allows those two visible strings to be overridden through a local pre-launch config file, validates missing setup with actionable failures, and produces a repeatable debug-installable APK artifact.
+Bootstrap an Android-first React Native starter that launches locally on an emulator or device, renders `ExpenseTracker` with a visible starter label and greeting, applies a centralized dark purple high-contrast theme with a sophisticated old-money feel, uses Heroicons explicitly as the only icon set, allows visible text to be overridden through a local pre-launch config file, validates missing setup with actionable failures, and produces a repeatable debug-installable APK artifact.
 
 ## Technical Context
 
 **Language/Version**: JavaScript (ES2023) on Node.js 20 LTS  
-**Primary Dependencies**: React Native CLI (JavaScript template), React 18, React Native, Redux Toolkit, React Redux, Jest, React Native Testing Library  
+**Primary Dependencies**: React Native CLI (JavaScript template), React 18, React Native, Redux Toolkit, React Redux, react-native-heroicons, Jest, React Native Testing Library  
 **Storage**: N/A for this slice; no user, financial, SMS, or demo state is persisted  
 **Testing**: Jest component smoke test, config validation script test coverage where practical, manual Android emulator/device launch, manual debug APK install verification  
 **Target Platform**: Android emulator (Android 14/API 34 baseline) and physical Android device for local demo  
 **Project Type**: Mobile app, Android-first React Native starter  
 **Performance Goals**: First visible screen within 5 seconds of debug launch; no network requirement at startup; debug APK produced from documented commands  
-**Constraints**: Offline-capable startup, no SMS/database/budget logic, local config override before launch, clear preflight failure and recovery steps, no hard-coded secrets, minimal diff and stable starter checkpoint  
-**Scale/Scope**: Single starter screen, one local config contract, one validation/preflight script, one Redux starter slice, Android debug artifact only
+**Constraints**: Offline-capable startup, no SMS/database/budget logic, local config override before launch, centralized theme usage, Heroicons-only iconography, dark purple high-contrast styling, clear preflight failure and recovery steps, no hard-coded secrets, minimal diff and stable starter checkpoint  
+**Scale/Scope**: Single starter screen, one local config contract, one shared theme module, one validation/preflight script, one Redux starter slice, Android debug artifact only
 
 ## Constitution Check
 
@@ -30,6 +30,7 @@ _GATE: Passed before Phase 0 research. Re-checked after Phase 1 design._
 - [x] Financial privacy and safety are preserved by omission: no SMS egress, no database, no personal or financial data collection, and no secrets added.
 - [x] Performance validation is scoped to applicable starter budgets: first-screen render and local demo repeatability are measured now; SMS/DB/chart budgets remain for later feature slices.
 - [x] Manual override is included for this slice through a local config module that controls greeting and starter label before launch.
+- [x] Visual consistency is included through a shared theme module and single approved icon set for this slice.
 - [x] Code quality gates are included in the scaffold plan: Prettier, ESLint Airbnb, Husky, and lint-staged are part of the bootstrap tasks.
 - [x] Ambiguity handling is defined: implementation must search repository and governing docs first, then stop for human clarification if behavior remains unclear.
 - [x] Change scope stays minimal and reviewable: bootstrap only the app shell, config override, validation path, Android demo path, and related docs/tests.
@@ -74,6 +75,8 @@ src/
 │   └── StarterScreen.js
 ├── components/
 │   └── StarterCard.js
+├── theme/
+│   └── appTheme.js
 ├── features/
 │   └── starter/
 │       ├── starterSlice.js
@@ -104,11 +107,12 @@ __tests__/
 - Confirm the bootstrap path is React Native CLI with JavaScript rather than Expo or TypeScript, because the constitution names React Native (JavaScript) and the requested deliverable is a local Android demo plus debug-installable artifact.
 - Define the local override contract as an ignored `starterConfig.local.js` copied from a tracked example file so maintainers can change greeting and starter label without editing app logic.
 - Define preflight validation as a required wrapper step before `start`, `android`, and APK generation so missing config or Android SDK/device prerequisites fail with recovery guidance instead of opaque Gradle errors.
+- Define the shared visual theme as a centralized React Native theme module with dark purple high-contrast tokens and a sophisticated old-money tone, and use Heroicons explicitly for all starter iconography.
 
 ### Phase 1: Design and Contracts
 
 - Capture the minimal data model for starter config, visible starter experience, and demo readiness.
-- Capture the UI/config contract for what the first screen must render, what local config it consumes, and how failure messaging behaves.
+- Capture the UI/config contract for what the first screen must render, what local config it consumes, how the shared theme behaves, and how failure messaging behaves.
 - Document a quickstart path from clean checkout to local Android launch and debug APK location.
 
 ### Phase 2: Implementation Strategy
@@ -116,12 +120,13 @@ __tests__/
 1. Bootstrap the React Native project and Android buildable baseline at repo root.
 2. Add repo-quality scaffolding required by the constitution: Prettier, ESLint Airbnb, Husky, lint-staged, and absolute-import configuration where practical.
 3. Add `starterConfig.example.js`, ignore `starterConfig.local.js`, and implement a validation script plus npm/yarn wrapper commands that stop early with actionable setup errors.
-4. Implement a single starter screen backed by a minimal Redux slice that surfaces `ExpenseTracker`, greeting text, and a visible starter/baseline label without any network or data access.
+4. Implement a single starter screen backed by a minimal Redux slice that surfaces `ExpenseTracker`, greeting text, and a visible starter or baseline label without any network or data access, and style it through a shared theme with explicit Heroicons usage.
 5. Add smoke tests, quickstart/docs updates, and manual verification steps for emulator/device launch and debug APK retrieval.
 
 ## Task Generation Notes
 
 - Keep User Story 1 focused on app bootstrap, offline starter render, and local config loading.
+- Keep User Story 1 responsible for shared theme application and Heroicons-only icon usage on the starter screen.
 - Keep User Story 2 focused on repeatable Android demo commands, debug APK generation, and setup-failure recovery messaging.
 - Keep User Story 3 focused on scope protection, privacy-by-omission checks, and avoiding accidental introduction of future expense-tracking logic.
 - Treat iOS support, SQLite setup, SMS permissions, parsing, dedupe, budgeting, goal allocation, analytics, authentication, and release signing as follow-on features, not part of this task set.
