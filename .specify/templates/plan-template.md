@@ -29,39 +29,41 @@
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - [ ] Offline-first scope preserved (no cloud dependency for core SMS parsing,
-  transaction storage, budgeting, and goal allocation).
+      transaction storage, budgeting, and goal allocation).
 - [ ] Deterministic pipeline defined end-to-end:
-  SMS -> sender -> bank -> parser -> extraction -> dedupe -> storage -> updates.
+      SMS -> sender -> bank -> parser -> extraction -> dedupe -> storage -> updates.
 - [ ] Parser strategy supports modular backends (`RegexParser` now, `MLParser` future)
-  with stable `TransactionCandidate` contract.
+      with stable `TransactionCandidate` contract.
 - [ ] Duplicate detection uses defined weighted scoring and threshold with user-facing
-  merge-or-keep resolution flow.
+      merge-or-keep resolution flow.
 - [ ] Financial privacy and safety controls are specified:
-  encrypted local DB, no SMS egress, PIN/biometric options.
+      encrypted local DB, no SMS egress, PIN/biometric options.
 - [ ] Performance validation plan exists for budgets:
-  parse < 20 ms, DB query < 50 ms, chart render < 100 ms.
+      parse < 20 ms, DB query < 50 ms, chart render < 100 ms.
 - [ ] Manual override UX is included for transaction edit/delete/category changes.
 - [ ] Code quality gates are included (Prettier, ESLint Airbnb, Husky, lint-staged).
 - [ ] Ambiguous behavior handling is defined: source-of-truth lookup or mandatory
-  human clarification before code changes.
+      human clarification before code changes.
 - [ ] Change scope is minimal and reviewable; no unrelated renames/format sweeps/
-  architecture reshuffles are included.
+      architecture reshuffles are included.
 - [ ] Existing project utilities, error handling, and patterns are reused where
-  possible.
+      possible.
 - [ ] Root-cause fixes are limited to the touched area; unrelated follow-up work is
-  split into separate TODOs or later changes.
+      split into separate TODOs or later changes.
 - [ ] Large changes are decomposed into incremental slices with module/call-path/
-  contract inventory, stable API/data semantics per slice, migration checkpoints,
-  and runnable intermediate states.
+      contract inventory, stable API/data semantics per slice, migration checkpoints,
+      and runnable intermediate states.
 - [ ] Secrets strategy is defined through environment `.env` usage (no hard-coded
-  secrets).
+      secrets).
+- [ ] The spec lives on a newly created feature branch, and the active branch
+      exactly matches the spec directory name under `/specs/`.
 - [ ] Naming/interface conventions are explicitly planned by language/runtime,
-  including snake_case/camelCase rules, UPPER_SNAKE_CASE constants, persisted JSON
-  snake_case, JavaScript object parameter signatures, import strategy, and boundary
-  mapping for external contracts.
+      including snake_case/camelCase rules, UPPER_SNAKE_CASE constants, persisted JSON
+      snake_case, JavaScript object parameter signatures, import strategy, and boundary
+      mapping for external contracts.
 - [ ] Plan references a written spec/issue/design note for non-exploratory work.
 - [ ] Repository navigation relies on search/discovery, not assumed paths.
 
@@ -80,6 +82,7 @@ specs/[###-feature]/
 ```
 
 ### Source Code (repository root)
+
 <!--
   ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
   for this feature. Delete unused options and expand the chosen structure with
@@ -130,7 +133,7 @@ directories captured above]
 
 > **Fill ONLY if Constitution Check has violations that must be justified**
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+| Violation                  | Why Needed         | Simpler Alternative Rejected Because |
+| -------------------------- | ------------------ | ------------------------------------ |
+| [e.g., 4th project]        | [current need]     | [why 3 projects insufficient]        |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient]  |
