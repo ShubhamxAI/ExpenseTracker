@@ -9,7 +9,6 @@ import { fileURLToPath } from 'node:url';
 const currentFilePath = fileURLToPath(import.meta.url);
 const currentDirectoryPath = path.dirname(currentFilePath);
 const repoRoot = path.resolve(currentDirectoryPath, '..');
-const localConfigPath = path.join(repoRoot, 'src/config/starterConfig.js');
 const nodeModulesPath = path.join(repoRoot, 'node_modules');
 const androidProjectPath = path.join(repoRoot, 'android');
 const gradleWrapperPath = path.join(androidProjectPath, 'gradlew');
@@ -77,22 +76,6 @@ function validateNodeDependencies({ blockingCommand } = {}) {
       code: 'MISSING_NODE_DEPENDENCIES',
       message: 'Project dependencies are not installed.',
       recoverySteps: ['Run yarn from the repository root.'],
-      blockingCommand,
-    });
-  }
-
-  return null;
-}
-
-function validateLocalConfig({ blockingCommand } = {}) {
-  if (!fs.existsSync(localConfigPath)) {
-    return createFailure({
-      code: 'MISSING_LOCAL_CONFIG',
-      message: 'The local starter configuration file is missing.',
-      recoverySteps: [
-        'Copy src/config/starterConfig.example.js to src/config/starterConfig.js.',
-        'Edit greetingMessage and baselineLabel before retrying the starter command.',
-      ],
       blockingCommand,
     });
   }
@@ -230,7 +213,6 @@ function main() {
   const androidSdkPath = resolveAndroidSdkPath();
   const validations = [
     validateNodeDependencies({ blockingCommand: commandName }),
-    validateLocalConfig({ blockingCommand: commandName }),
     validateAndroidSdk({ blockingCommand: commandName, androidSdkPath }),
     validateAndroidPlatformTools({
       blockingCommand: commandName,

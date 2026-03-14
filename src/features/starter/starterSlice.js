@@ -1,22 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { STARTER_DISPLAY } from '../../constants/starterDisplay';
-import { starterSeedExpenses } from '../../data/expenseDatabase';
 import { appTheme } from '../../theme/appTheme';
-import { loadStarterConfig } from '../../utils/loadStarterConfig';
-
-const starterConfig = loadStarterConfig();
 
 const initialState = {
-  productName: STARTER_DISPLAY.PRODUCT_NAME,
-  greetingMessage: starterConfig.greetingMessage,
-  baselineLabel: starterConfig.baselineLabel,
-  heroIconName: STARTER_DISPLAY.STARTER_ICON_NAME,
-  mainIconName: STARTER_DISPLAY.MAIN_ICON_NAME,
+  productName: STARTER_DISPLAY.PRODUCT_NAME || 'ExpenseTracker',
+  greetingMessage:
+    STARTER_DISPLAY.SPLASH_GREETING_MESSAGE || 'Welcome to ExpenseTracker',
+  baselineLabel: STARTER_DISPLAY.SPLASH_BASELINE_LABEL || '',
+  heroIconName: STARTER_DISPLAY.STARTER_ICON_NAME || 'ShieldCheckIcon',
+  mainIconName: STARTER_DISPLAY.MAIN_ICON_NAME || 'BanknotesIcon',
   isOfflineCapable: true,
   buildVariant: 'debug',
   theme: appTheme,
-  expenses: starterSeedExpenses,
+  expenses: [],
+  budgetAmount: null,
   expensesStatus: 'idle',
   expensesError: null,
 };
@@ -25,12 +23,6 @@ const starterSlice = createSlice({
   name: 'starter',
   initialState,
   reducers: {
-    refreshStarterConfig: (state) => {
-      const refreshedConfig = loadStarterConfig();
-
-      state.greetingMessage = refreshedConfig.greetingMessage;
-      state.baselineLabel = refreshedConfig.baselineLabel;
-    },
     expensesLoadStarted: (state) => {
       state.expensesStatus = 'loading';
       state.expensesError = null;
@@ -40,9 +32,15 @@ const starterSlice = createSlice({
       state.expensesStatus = 'ready';
       state.expensesError = null;
     },
+    budgetHydrated: (state, action) => {
+      state.budgetAmount = action.payload;
+    },
     expensesLoadFailed: (state, action) => {
       state.expensesStatus = 'error';
       state.expensesError = action.payload;
+    },
+    expenseAdded: (state, action) => {
+      state.expenses.push(action.payload);
     },
     expenseRemoved: (state, action) => {
       state.expenses = state.expenses.filter(
@@ -53,18 +51,20 @@ const starterSlice = createSlice({
 });
 
 const {
+  budgetHydrated,
+  expenseAdded,
   expenseRemoved,
   expensesHydrated,
   expensesLoadFailed,
   expensesLoadStarted,
-  refreshStarterConfig,
 } = starterSlice.actions;
 
 export {
+  budgetHydrated,
+  expenseAdded,
   expenseRemoved,
   expensesHydrated,
   expensesLoadFailed,
   expensesLoadStarted,
-  refreshStarterConfig,
 };
 export default starterSlice.reducer;

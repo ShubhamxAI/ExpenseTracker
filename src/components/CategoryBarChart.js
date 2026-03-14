@@ -87,9 +87,7 @@ function CategoryBarChart({ expenses = [] } = {}) {
           <Text style={styles.eyebrow}>Category Snapshot</Text>
           <Text style={styles.title}>Spending by category</Text>
         </View>
-        <View style={styles.iconBadge}>
-          <ChartPieIcon color={appTheme.colors.textPrimary} size={22} />
-        </View>
+        <ChartPieIcon color={appTheme.colors.textSecondary} size={20} />
       </View>
       <View style={styles.chartBody}>
         <View style={styles.pieChartBlock}>
@@ -162,9 +160,9 @@ function CategoryBarChart({ expenses = [] } = {}) {
 const styles = StyleSheet.create({
   card: {
     marginBottom: appTheme.spacing.lg,
-    padding: appTheme.spacing.xl,
+    padding: appTheme.spacing.lg,
     borderRadius: appTheme.radii.lg,
-    backgroundColor: appTheme.colors.surfaceElevated,
+    backgroundColor: appTheme.colors.surface,
     borderWidth: 1,
     borderColor: appTheme.colors.border,
   },
@@ -176,21 +174,13 @@ const styles = StyleSheet.create({
   },
   eyebrow: {
     marginBottom: appTheme.spacing.xs,
-    color: appTheme.colors.accent,
+    color: appTheme.colors.textSecondary,
     ...appTheme.typography.label,
   },
   title: {
     color: appTheme.colors.textPrimary,
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '600',
-  },
-  iconBadge: {
-    width: 48,
-    height: 48,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 24,
-    backgroundColor: appTheme.colors.primary,
   },
   chartBody: {
     gap: appTheme.spacing.lg,
@@ -216,10 +206,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   legendList: {
-    gap: appTheme.spacing.md,
+    gap: 12,
   },
   row: {
-    gap: appTheme.spacing.sm,
+    gap: 6,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: appTheme.colors.border,
   },
   labelRow: {
     flexDirection: 'row',

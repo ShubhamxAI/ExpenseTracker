@@ -5,21 +5,33 @@ import { STARTER_DISPLAY } from '../constants/starterDisplay';
 import { appTheme } from '../theme/appTheme';
 
 function StarterCard({ productName, greetingMessage, baselineLabel } = {}) {
+  const metaItems = [
+    STARTER_DISPLAY.THEME_AESTHETIC,
+    STARTER_DISPLAY.THEME_ICON_SET,
+    STARTER_DISPLAY.SCOPE_LABEL,
+  ].filter(Boolean);
+
   return (
     <View style={styles.card}>
       <View style={styles.iconBadge}>
         <ShieldCheckIcon color={appTheme.colors.textPrimary} size={28} />
       </View>
-      <Text style={styles.label}>{baselineLabel}</Text>
+      {baselineLabel ? <Text style={styles.label}>{baselineLabel}</Text> : null}
       <Text style={styles.productName}>{productName}</Text>
       <Text style={styles.greeting}>{greetingMessage}</Text>
-      <View style={styles.metaRow}>
-        <Text style={styles.metaText}>{STARTER_DISPLAY.THEME_AESTHETIC}</Text>
-        <Text style={styles.metaDivider}>/</Text>
-        <Text style={styles.metaText}>{STARTER_DISPLAY.THEME_ICON_SET}</Text>
-        <Text style={styles.metaDivider}>/</Text>
-        <Text style={styles.metaText}>{STARTER_DISPLAY.SCOPE_LABEL}</Text>
-      </View>
+      {STARTER_DISPLAY.SCOPE_BOUNDARY ? (
+        <Text style={styles.storageText}>{STARTER_DISPLAY.SCOPE_BOUNDARY}</Text>
+      ) : null}
+      {metaItems.length > 0 ? (
+        <View style={styles.metaRow}>
+          {metaItems.map((metaItem, index) => (
+            <View key={metaItem} style={styles.metaItemWrap}>
+              {index > 0 ? <Text style={styles.metaDivider}>/</Text> : null}
+              <Text style={styles.metaText}>{metaItem}</Text>
+            </View>
+          ))}
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -54,12 +66,24 @@ const styles = StyleSheet.create({
     ...appTheme.typography.title,
   },
   greeting: {
-    marginBottom: appTheme.spacing.lg,
+    marginBottom: appTheme.spacing.md,
     color: appTheme.colors.textSecondary,
     lineHeight: 24,
     ...appTheme.typography.body,
   },
+  storageText: {
+    marginBottom: appTheme.spacing.lg,
+    color: appTheme.colors.textPrimary,
+    fontSize: 13,
+    fontWeight: '600',
+    letterSpacing: 0.4,
+  },
   metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+  },
+  metaItemWrap: {
     flexDirection: 'row',
     alignItems: 'center',
   },

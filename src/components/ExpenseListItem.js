@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: appTheme.spacing.xs,
-    backgroundColor: '#7D2035',
+    backgroundColor: '#6D3146',
     borderRadius: appTheme.radii.md,
   },
   removeLabel: {
@@ -136,12 +136,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    minHeight: 68,
     paddingHorizontal: appTheme.spacing.md,
-    paddingVertical: appTheme.spacing.md,
+    paddingVertical: 14,
     borderRadius: appTheme.radii.md,
-    backgroundColor: appTheme.colors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: appTheme.colors.border,
+    backgroundColor: appTheme.colors.surfaceElevated,
+    borderWidth: 1,
+    borderColor: appTheme.colors.border,
   },
   copyBlock: {
     flex: 1,
@@ -150,17 +151,18 @@ const styles = StyleSheet.create({
   merchantName: {
     marginBottom: appTheme.spacing.xs,
     color: appTheme.colors.textPrimary,
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: '600',
   },
   metaText: {
     color: appTheme.colors.textSecondary,
-    ...appTheme.typography.body,
+    fontSize: 13,
+    fontWeight: '500',
   },
   amountLabel: {
-    color: appTheme.colors.accent,
-    fontSize: 17,
-    fontWeight: '700',
+    color: appTheme.colors.textPrimary,
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 

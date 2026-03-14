@@ -17,11 +17,14 @@ const selectStarterTheme = (state) => state.starter.theme;
 
 const selectExpenses = (state) => state.starter.expenses;
 
+const selectBudgetAmount = (state) => state.starter.budgetAmount;
+
 const selectExpensesStatus = (state) => state.starter.expensesStatus;
 
 const selectExpensesError = (state) => state.starter.expensesError;
 
 export {
+  selectBudgetAmount,
   selectExpenses,
   selectExpensesError,
   selectExpensesStatus,

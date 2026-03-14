@@ -12,11 +12,10 @@ the shared dark purple theme and Heroicons only.
 ## Run Locally
 
 1. Install dependencies with `yarn`.
-2. Ensure `src/config/starterConfig.js` exists. If not, copy it from `src/config/starterConfig.example.js`.
-3. Run `yarn starter:check`.
-4. Start the dev server with `yarn starter:start`.
-5. Open the app in Expo Go, or run `yarn starter:android` if your Android SDK and emulator or device are ready.
-6. Swipe any expense card left on the main page to remove it from the visible list and the local device database.
+2. Run `yarn starter:check`.
+3. Start the dev server with `yarn starter:start`.
+4. Open the app in Expo Go, or run `yarn starter:android` if your Android SDK and emulator or device are ready.
+5. Swipe any expense card left on the main page to remove it from the visible list and the local device database.
 
 ## Build Android Debug APK
 
@@ -29,7 +28,7 @@ the shared dark purple theme and Heroicons only.
 - The starter is offline-first and local-only.
 - The visible expenses are demo data stored only in the local on-device SQLite database for UI review.
 - No SMS, analytics, authentication, or network sync behavior is included in this slice.
-- Local config files must contain display-copy overrides only and no secrets.
+- Splash copy is hard-coded in shared starter constants rather than loaded from local config.
 
 ## Governance
 

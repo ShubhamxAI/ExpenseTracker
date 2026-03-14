@@ -11,7 +11,6 @@ Tracked example file:
 ```javascript
 const STARTER_CONFIG = {
   greetingMessage: 'Welcome to ExpenseTracker',
-  baselineLabel: 'Starter Baseline',
 };
 
 export default STARTER_CONFIG;

@@ -1,7 +1,8 @@
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import StarterCard from '../components/StarterCard';
+import { STARTER_DISPLAY } from '../constants/starterDisplay';
 import {
   selectStarterDisplay,
   selectStarterTheme,
@@ -24,6 +25,11 @@ function StarterScreen() {
           greetingMessage={starterDisplay.greetingMessage}
           baselineLabel={starterDisplay.baselineLabel}
         />
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>
+            {STARTER_DISPLAY.SPLASH_FOOTER_TEXT}
+          </Text>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -37,6 +43,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 24,
+  },
+  footer: {
+    position: 'absolute',
+    right: 24,
+    bottom: 24,
+    left: 24,
+    alignItems: 'center',
+  },
+  footerText: {
+    color: 'rgba(243, 236, 255, 0.72)',
+    fontSize: 13,
+    fontWeight: '500',
+    letterSpacing: 0.3,
   },
 });
 
