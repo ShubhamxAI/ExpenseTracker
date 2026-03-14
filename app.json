@@ -14,6 +14,6 @@
     "android": {
       "package": "com.expensetracker.app"
     },
-    "plugins": ["expo-asset"]
+    "plugins": ["expo-asset", "expo-sqlite", "expo-sharing"]
   }
 }

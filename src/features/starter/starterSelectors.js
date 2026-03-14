@@ -1,12 +1,31 @@
+import { createSelector } from '@reduxjs/toolkit';
+
 const selectStarterState = (state) => state.starter;
 
-const selectStarterDisplay = (state) => ({
-  productName: state.starter.productName,
-  greetingMessage: state.starter.greetingMessage,
-  baselineLabel: state.starter.baselineLabel,
-  heroIconName: state.starter.heroIconName,
-});
+const selectStarterDisplay = createSelector(
+  [selectStarterState],
+  (starterState) => ({
+    productName: starterState.productName,
+    greetingMessage: starterState.greetingMessage,
+    baselineLabel: starterState.baselineLabel,
+    heroIconName: starterState.heroIconName,
+    mainIconName: starterState.mainIconName,
+  }),
+);
 
 const selectStarterTheme = (state) => state.starter.theme;
 
-export { selectStarterDisplay, selectStarterState, selectStarterTheme };
+const selectExpenses = (state) => state.starter.expenses;
+
+const selectExpensesStatus = (state) => state.starter.expensesStatus;
+
+const selectExpensesError = (state) => state.starter.expensesError;
+
+export {
+  selectExpenses,
+  selectExpensesError,
+  selectExpensesStatus,
+  selectStarterDisplay,
+  selectStarterState,
+  selectStarterTheme,
+};

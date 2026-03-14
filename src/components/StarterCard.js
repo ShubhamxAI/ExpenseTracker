@@ -17,6 +17,8 @@ function StarterCard({ productName, greetingMessage, baselineLabel } = {}) {
         <Text style={styles.metaText}>{STARTER_DISPLAY.THEME_AESTHETIC}</Text>
         <Text style={styles.metaDivider}>/</Text>
         <Text style={styles.metaText}>{STARTER_DISPLAY.THEME_ICON_SET}</Text>
+        <Text style={styles.metaDivider}>/</Text>
+        <Text style={styles.metaText}>{STARTER_DISPLAY.SCOPE_LABEL}</Text>
       </View>
     </View>
   );

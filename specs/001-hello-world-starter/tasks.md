@@ -30,16 +30,16 @@ description: 'Implementation tasks for the Hello World Starter feature'
 
 **⚠️ CRITICAL**: No user story work should begin until this phase is complete.
 
-- [ ] T006 Create the tracked starter override example in src/config/starterConfig.example.js
-- [ ] T007 [P] Add local config ignore rules for starter overrides in .gitignore
-- [ ] T008 [P] Implement starter config loading and validation in src/utils/loadStarterConfig.js
-- [ ] T009 Create starter display constants in src/constants/starterDisplay.js
-- [ ] T009A [P] Define centralized dark purple high-contrast theme tokens in src/theme/appTheme.js
-- [ ] T010 [P] Implement the Redux store shell in src/redux/store.js
-- [ ] T011 [P] Add the starter feature state slice in src/features/starter/starterSlice.js
-- [ ] T012 [P] Add starter feature selectors in src/features/starter/starterSelectors.js
-- [ ] T013 Implement deterministic preflight validation and failure codes in scripts/validate-starter-setup.mjs
-- [ ] T014 Wire preflight, Android run, and APK build commands into package.json
+- [x] T006 Create the tracked starter override example in src/config/starterConfig.example.js
+- [x] T007 [P] Add local config ignore rules for starter overrides in .gitignore
+- [x] T008 [P] Implement starter config loading and validation in src/utils/loadStarterConfig.js
+- [x] T009 Create starter display constants in src/constants/starterDisplay.js
+- [x] T009A [P] Define centralized dark purple high-contrast theme tokens in src/theme/appTheme.js
+- [x] T010 [P] Implement the Redux store shell in src/redux/store.js
+- [x] T011 [P] Add the starter feature state slice in src/features/starter/starterSlice.js
+- [x] T012 [P] Add starter feature selectors in src/features/starter/starterSelectors.js
+- [x] T013 Implement deterministic preflight validation and failure codes in scripts/validate-starter-setup.mjs
+- [x] T014 Wire preflight, Android run, and APK build commands into package.json
 
 **Checkpoint**: Foundation ready. User stories can now proceed in priority order.
 
@@ -53,12 +53,12 @@ description: 'Implementation tasks for the Hello World Starter feature'
 
 ### Implementation for User Story 1
 
-- [ ] T015 [P] [US1] Build the starter card presentation component in src/components/StarterCard.js
-- [ ] T016 [US1] Implement the starter screen container in src/pages/StarterScreen.js
-- [ ] T017 [US1] Wire the starter screen and Redux provider into App.js and index.js
-- [ ] T018 [US1] Connect loaded config values to starter state and rendering in src/features/starter/starterSlice.js
-- [ ] T018A [US1] Apply the shared dark purple theme and Heroicons-only styling to the starter screen in src/components/StarterCard.js and src/pages/StarterScreen.js
-- [ ] T019 [US1] Document the offline launch, theme, and Heroicons verification steps in specs/001-hello-world-starter/quickstart.md
+- [x] T015 [P] [US1] Build the starter card presentation component in src/components/StarterCard.js
+- [x] T016 [US1] Implement the starter screen container in src/pages/StarterScreen.js
+- [x] T017 [US1] Wire the starter screen and Redux provider into App.js and index.js
+- [x] T018 [US1] Connect loaded config values to starter state and rendering in src/features/starter/starterSlice.js
+- [x] T018A [US1] Apply the shared dark purple theme and Heroicons-only styling to the starter screen in src/components/StarterCard.js and src/pages/StarterScreen.js
+- [x] T019 [US1] Document the offline launch, theme, and Heroicons verification steps in specs/001-hello-world-starter/quickstart.md
 
 **Checkpoint**: User Story 1 is independently runnable and demonstrable as the MVP.
 
@@ -72,11 +72,11 @@ description: 'Implementation tasks for the Hello World Starter feature'
 
 ### Implementation for User Story 2
 
-- [ ] T020 [US2] Expand preflight checks for Android SDK, device availability, and blocked-command recovery guidance in scripts/validate-starter-setup.mjs
-- [ ] T021 [US2] Add the Android debug APK generation command and artifact path handling in package.json
-- [ ] T022 [P] [US2] Document the emulator or device demo flow and APK retrieval steps in specs/001-hello-world-starter/quickstart.md
-- [ ] T023 [P] [US2] Align the failure and artifact contract details with implementation in specs/001-hello-world-starter/contracts/starter-experience.md
-- [ ] T024 [US2] Update the repository startup and demo instructions in README.md
+- [x] T020 [US2] Expand preflight checks for Android SDK, device availability, and blocked-command recovery guidance in scripts/validate-starter-setup.mjs
+- [x] T021 [US2] Add the Android debug APK generation command and artifact path handling in package.json
+- [x] T022 [P] [US2] Document the emulator or device demo flow and APK retrieval steps in specs/001-hello-world-starter/quickstart.md
+- [x] T023 [P] [US2] Align the failure and artifact contract details with implementation in specs/001-hello-world-starter/contracts/starter-experience.md
+- [x] T024 [US2] Update the repository startup and demo instructions in README.md
 
 **Checkpoint**: User Story 2 is independently demonstrable with a repeatable local Android demo and debug artifact path.
 
@@ -90,10 +90,10 @@ description: 'Implementation tasks for the Hello World Starter feature'
 
 ### Implementation for User Story 3
 
-- [ ] T025 [US3] Constrain the app shell to starter-only behavior and imports in App.js
-- [ ] T026 [P] [US3] Keep the starter screen free of network, SMS, database, and analytics side effects in src/pages/StarterScreen.js
-- [ ] T027 [P] [US3] Encode starter-only copy, theme boundaries, and Heroicons-only scope in src/constants/starterDisplay.js
-- [ ] T028 [US3] Document the stable starter checkpoint and out-of-scope boundaries in specs/001-hello-world-starter/quickstart.md
+- [x] T025 [US3] Constrain the app shell to starter-only behavior and imports in App.js
+- [x] T026 [P] [US3] Keep the starter screen free of network, SMS, database, and analytics side effects in src/pages/StarterScreen.js
+- [x] T027 [P] [US3] Encode starter-only copy, theme boundaries, and Heroicons-only scope in src/constants/starterDisplay.js
+- [x] T028 [US3] Document the stable starter checkpoint and out-of-scope boundaries in specs/001-hello-world-starter/quickstart.md
 
 **Checkpoint**: All user stories remain independently valid and the starter stays safely scoped.
 

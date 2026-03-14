@@ -1,5 +1,5 @@
 const starterConfig = {
-  greetingMessage: 'Welcome back to ExpenseTracker',
+  greetingMessage: 'Welcome to ExpenseTracker',
   baselineLabel: 'Starter Baseline',
 };
 
