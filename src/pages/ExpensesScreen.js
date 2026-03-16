@@ -5,12 +5,11 @@ import {
   PermissionsAndroid,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   TextInput,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import {
@@ -50,14 +49,16 @@ import {
   expensesLoadStarted,
 } from '../features/starter/starterSlice';
 import { appTheme } from '../theme/appTheme';
+import { getSignedExpenseAmount } from '../utils/expenseAmount';
+import { notifyExpenseAddedAsync } from '../utils/expenseNotifications';
 import { exportExpensesCsv } from '../utils/exportExpensesCsv';
+import { parseBankSmsMessage } from '../utils/smsTransactionParser';
 
 const MAX_VISIBLE_EXPENSES = 5;
 const EXPENSE_ROW_HEIGHT = 76;
 const INTERNAL_LIST_MAX_HEIGHT = MAX_VISIBLE_EXPENSES * EXPENSE_ROW_HEIGHT;
 const EXCEL_VIEW_MAX_BODY_HEIGHT = 360;
-const STICKY_MENU_TOP_OFFSET =
-  (Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 0) + 24;
+const STICKY_MENU_TOP_OFFSET = 24;
 const SORT_OPTIONS = {
   TIMESTAMP: 'timestamp',
   AMOUNT_DESC: 'amount-desc',
@@ -80,12 +81,6 @@ const FILTER_OPTION_LABELS = {
   [FILTER_OPTIONS.THIRTY_DAYS]: '30 days',
   [FILTER_OPTIONS.SIX_MONTHS]: '6 months',
 };
-
-function parseAmountLabel(amountLabel = '') {
-  const numericValue = Number.parseFloat(amountLabel.replace(/[^0-9.]/g, ''));
-
-  return Number.isNaN(numericValue) ? 0 : numericValue;
-}
 
 function parseSpentAtDate(spentAt = '') {
   const match = spentAt.match(
@@ -162,6 +157,7 @@ function getFilterStartDate(filterOption) {
 
 function ExpensesScreen() {
   const dispatch = useDispatch();
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
   const starterTheme = useSelector(selectStarterTheme);
   const starterDisplay = useSelector(selectStarterDisplay);
   const budgetAmount = useSelector(selectBudgetAmount);
@@ -172,11 +168,14 @@ function ExpensesScreen() {
   const [isAddExpenseVisible, setIsAddExpenseVisible] = useState(false);
   const [isBudgetVisible, setIsBudgetVisible] = useState(false);
   const [isExcelVisible, setIsExcelVisible] = useState(false);
+  const [isSmsImportVisible, setIsSmsImportVisible] = useState(false);
   const [pendingRemovalId, setPendingRemovalId] = useState(null);
   const [actionStatusMessage, setActionStatusMessage] = useState('');
   const [expenseMerchantName, setExpenseMerchantName] = useState('');
   const [expenseCategory, setExpenseCategory] = useState('');
   const [expenseAmountValue, setExpenseAmountValue] = useState('');
+  const [smsSenderValue, setSmsSenderValue] = useState('');
+  const [smsBodyValue, setSmsBodyValue] = useState('');
   const [budgetInputValue, setBudgetInputValue] = useState('');
   const [isControlsDropdownVisible, setIsControlsDropdownVisible] =
     useState(false);
@@ -188,8 +187,7 @@ function ExpensesScreen() {
   const isMenuVisibleRef = useRef(true);
   const hasRequestedSmsPermissionRef = useRef(false);
   const totalSpent = expenses.reduce(
-    (runningTotal, expense) =>
-      runningTotal + parseAmountLabel(expense.amountLabel),
+    (runningTotal, expense) => runningTotal + getSignedExpenseAmount(expense),
     0,
   );
   const remainingBudgetAmount =
@@ -213,8 +211,8 @@ function ExpensesScreen() {
     if (sortOption === SORT_OPTIONS.AMOUNT_DESC) {
       return sortableExpenses.sort(
         (leftExpense, rightExpense) =>
-          parseAmountLabel(rightExpense.amountLabel) -
-          parseAmountLabel(leftExpense.amountLabel),
+          getSignedExpenseAmount(rightExpense) -
+          getSignedExpenseAmount(leftExpense),
       );
     }
 
@@ -241,6 +239,11 @@ function ExpensesScreen() {
   }, [filteredExpenses, sortOption]);
   const shouldUseInternalListScroll =
     visibleExpenses.length > MAX_VISIBLE_EXPENSES;
+  const controlsDropdownMaxHeight = Math.max(
+    220,
+    Math.min(windowHeight * 0.46, windowHeight - 220),
+  );
+  const controlsDropdownWidth = Math.min(252, Math.max(212, windowWidth - 72));
 
   useEffect(() => {
     let isMounted = true;
@@ -385,6 +388,14 @@ function ExpensesScreen() {
     setIsExcelVisible(true);
   }
 
+  function handleOpenSmsImportView() {
+    handleCloseMenu();
+    setIsControlsDropdownVisible(false);
+    setSmsSenderValue('');
+    setSmsBodyValue('');
+    setIsSmsImportVisible(true);
+  }
+
   function handleOpenAddExpenseView() {
     handleCloseMenu();
     setIsControlsDropdownVisible(false);
@@ -405,6 +416,10 @@ function ExpensesScreen() {
 
   function handleCloseExcelView() {
     setIsExcelVisible(false);
+  }
+
+  function handleCloseSmsImportView() {
+    setIsSmsImportVisible(false);
   }
 
   function handleCloseAddExpenseView() {
@@ -468,8 +483,35 @@ function ExpensesScreen() {
       });
 
       dispatch(expenseAdded(nextExpense));
+      await notifyExpenseAddedAsync(nextExpense);
       setActionStatusMessage('Expense saved to the local SQLite database.');
       handleCloseAddExpenseView();
+    } catch (error) {
+      setActionStatusMessage(error.message);
+    }
+  }
+
+  async function handleImportSmsExpense() {
+    const parsedExpense = parseBankSmsMessage(smsBodyValue, {
+      sender: smsSenderValue,
+    });
+
+    if (!parsedExpense) {
+      setActionStatusMessage(
+        'Could not detect a bank credit or debit amount from that SMS text.',
+      );
+      return;
+    }
+
+    try {
+      const nextExpense = await addExpenseToDatabase(parsedExpense);
+
+      dispatch(expenseAdded(nextExpense));
+      await notifyExpenseAddedAsync(nextExpense);
+      setActionStatusMessage(
+        `${parsedExpense.transactionType === 'credit' ? 'Credit' : 'Expense'} imported from SMS text.`,
+      );
+      handleCloseSmsImportView();
     } catch (error) {
       setActionStatusMessage(error.message);
     }
@@ -516,13 +558,14 @@ function ExpensesScreen() {
         category={expense.category}
         amountLabel={expense.amountLabel}
         spentAt={expense.spentAt}
+        transactionType={expense.transactionType}
         onRemove={() => handleRemoveExpense(expense.id)}
       />
     ));
   }
 
   return (
-    <SafeAreaView
+    <View
       style={[
         styles.screen,
         { backgroundColor: starterTheme.colors.background },
@@ -608,68 +651,87 @@ function ExpensesScreen() {
                   {FILTER_OPTION_LABELS[filterOption]}
                 </Text>
                 {isControlsDropdownVisible ? (
-                  <View style={styles.controlDropdownMenu}>
-                    <View style={styles.controlSection}>
-                      <Text style={styles.controlSectionLabel}>Sort</Text>
-                      {Object.entries(SORT_OPTION_LABELS).map(
-                        ([optionValue, optionLabel]) => (
-                          <Pressable
-                            key={optionValue}
-                            onPress={() => handleSelectSortOption(optionValue)}
-                            style={styles.controlDropdownItem}
-                          >
-                            <Text
-                              style={[
-                                styles.controlDropdownItemLabel,
-                                optionValue === sortOption
-                                  ? styles.controlDropdownItemLabelActive
-                                  : null,
-                              ]}
+                  <View
+                    style={[
+                      styles.controlDropdownMenu,
+                      {
+                        maxHeight: controlsDropdownMaxHeight,
+                        width: controlsDropdownWidth,
+                      },
+                    ]}
+                  >
+                    <ScrollView
+                      nestedScrollEnabled
+                      showsVerticalScrollIndicator={false}
+                      bounces={false}
+                      contentContainerStyle={
+                        styles.controlDropdownScrollContent
+                      }
+                    >
+                      <View style={styles.controlSection}>
+                        <Text style={styles.controlSectionLabel}>Sort</Text>
+                        {Object.entries(SORT_OPTION_LABELS).map(
+                          ([optionValue, optionLabel]) => (
+                            <Pressable
+                              key={optionValue}
+                              onPress={() =>
+                                handleSelectSortOption(optionValue)
+                              }
+                              style={styles.controlDropdownItem}
                             >
-                              {optionLabel}
-                            </Text>
-                            {optionValue === sortOption ? (
-                              <CheckIcon
-                                color={appTheme.colors.accent}
-                                size={16}
-                              />
-                            ) : null}
-                          </Pressable>
-                        ),
-                      )}
-                    </View>
-                    <View style={styles.controlSectionDivider} />
-                    <View style={styles.controlSection}>
-                      <Text style={styles.controlSectionLabel}>Filter</Text>
-                      {Object.entries(FILTER_OPTION_LABELS).map(
-                        ([optionValue, optionLabel]) => (
-                          <Pressable
-                            key={optionValue}
-                            onPress={() =>
-                              handleSelectFilterOption(optionValue)
-                            }
-                            style={styles.controlDropdownItem}
-                          >
-                            <Text
-                              style={[
-                                styles.controlDropdownItemLabel,
-                                optionValue === filterOption
-                                  ? styles.controlDropdownItemLabelActive
-                                  : null,
-                              ]}
+                              <Text
+                                style={[
+                                  styles.controlDropdownItemLabel,
+                                  optionValue === sortOption
+                                    ? styles.controlDropdownItemLabelActive
+                                    : null,
+                                ]}
+                              >
+                                {optionLabel}
+                              </Text>
+                              {optionValue === sortOption ? (
+                                <CheckIcon
+                                  color={appTheme.colors.accent}
+                                  size={16}
+                                />
+                              ) : null}
+                            </Pressable>
+                          ),
+                        )}
+                      </View>
+                      <View style={styles.controlSectionDivider} />
+                      <View style={styles.controlSection}>
+                        <Text style={styles.controlSectionLabel}>Filter</Text>
+                        {Object.entries(FILTER_OPTION_LABELS).map(
+                          ([optionValue, optionLabel]) => (
+                            <Pressable
+                              key={optionValue}
+                              onPress={() =>
+                                handleSelectFilterOption(optionValue)
+                              }
+                              style={styles.controlDropdownItem}
                             >
-                              {optionLabel}
-                            </Text>
-                            {optionValue === filterOption ? (
-                              <CheckIcon
-                                color={appTheme.colors.accent}
-                                size={16}
-                              />
-                            ) : null}
-                          </Pressable>
-                        ),
-                      )}
-                    </View>
+                              <Text
+                                style={[
+                                  styles.controlDropdownItemLabel,
+                                  optionValue === filterOption
+                                    ? styles.controlDropdownItemLabelActive
+                                    : null,
+                                ]}
+                              >
+                                {optionLabel}
+                              </Text>
+                              {optionValue === filterOption ? (
+                                <CheckIcon
+                                  color={appTheme.colors.accent}
+                                  size={16}
+                                />
+                              ) : null}
+                            </Pressable>
+                          ),
+                        )}
+                      </View>
+                    </ScrollView>
                   </View>
                 ) : null}
               </View>
@@ -715,6 +777,15 @@ function ExpensesScreen() {
               <Text style={styles.menuTitle}>Add Expense</Text>
               <Text style={styles.menuCaption}>
                 Save a manual expense to the local SQLite database
+              </Text>
+            </Pressable>
+            <Pressable
+              style={styles.menuItem}
+              onPress={handleOpenSmsImportView}
+            >
+              <Text style={styles.menuTitle}>Import SMS Text</Text>
+              <Text style={styles.menuCaption}>
+                Parse a bank message and add its credit or debit locally
               </Text>
             </Pressable>
             <Pressable style={styles.menuItem} onPress={handleOpenExcelView}>
@@ -811,6 +882,61 @@ function ExpensesScreen() {
       <Modal
         animationType="slide"
         transparent
+        visible={isSmsImportVisible}
+        onRequestClose={handleCloseSmsImportView}
+      >
+        <View style={styles.modalBackdrop}>
+          <View style={styles.addExpenseCard}>
+            <View style={styles.excelHeader}>
+              <View>
+                <Text style={styles.excelEyebrow}>Import SMS</Text>
+                <Text style={styles.excelTitle}>Parse bank text locally</Text>
+              </View>
+              <Pressable
+                style={styles.menuDismissButton}
+                onPress={handleCloseSmsImportView}
+              >
+                <Text style={styles.menuDismissLabel}>Close</Text>
+              </Pressable>
+            </View>
+            <View style={styles.formField}>
+              <Text style={styles.formLabel}>Sender</Text>
+              <TextInput
+                placeholder="AX-ICICIB"
+                placeholderTextColor={appTheme.colors.textSecondary}
+                value={smsSenderValue}
+                onChangeText={setSmsSenderValue}
+                style={styles.budgetInput}
+              />
+            </View>
+            <View style={styles.formField}>
+              <Text style={styles.formLabel}>SMS Text</Text>
+              <TextInput
+                multiline
+                placeholder="Rs 245.00 debited from card at Cedar House Cafe on Apr 7..."
+                placeholderTextColor={appTheme.colors.textSecondary}
+                textAlignVertical="top"
+                value={smsBodyValue}
+                onChangeText={setSmsBodyValue}
+                style={[styles.budgetInput, styles.smsBodyInput]}
+              />
+            </View>
+            <Text style={styles.menuCaption}>
+              This parses pasted bank messages on-device and stores the result
+              in SQLite with credit or debit labeling.
+            </Text>
+            <Pressable
+              style={styles.saveBudgetButton}
+              onPress={handleImportSmsExpense}
+            >
+              <Text style={styles.saveBudgetLabel}>Import SMS</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        animationType="slide"
+        transparent
         visible={isBudgetVisible}
         onRequestClose={handleCloseBudgetView}
       >
@@ -876,7 +1002,7 @@ function ExpensesScreen() {
           </View>
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -1022,6 +1148,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
   },
+  smsBodyInput: {
+    minHeight: 132,
+  },
   saveBudgetButton: {
     alignSelf: 'flex-start',
     paddingVertical: appTheme.spacing.md,
@@ -1098,7 +1227,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 54,
     right: 0,
-    minWidth: 212,
     zIndex: 8,
     borderRadius: appTheme.radii.md,
     borderWidth: 1,
@@ -1110,6 +1238,9 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 8 },
     elevation: 10,
+  },
+  controlDropdownScrollContent: {
+    paddingBottom: appTheme.spacing.xs,
   },
   controlSection: {
     paddingVertical: appTheme.spacing.xs,

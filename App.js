@@ -6,7 +6,7 @@ import { STARTER_DISPLAY } from './src/constants/starterDisplay';
 import ExpensesScreen from './src/pages/ExpensesScreen';
 import StarterScreen from './src/pages/StarterScreen';
 import { store } from './src/redux/store';
-import { appTheme } from './src/theme/appTheme';
+import { ensureExpenseNotificationPermissionsAsync } from './src/utils/expenseNotifications';
 
 function AppContent() {
   const [activeStage, setActiveStage] = useState(
@@ -14,6 +14,8 @@ function AppContent() {
   );
 
   useEffect(() => {
+    ensureExpenseNotificationPermissionsAsync();
+
     const splashTimer = setTimeout(() => {
       setActiveStage(STARTER_DISPLAY.FLOW_STAGES.MAIN);
     }, STARTER_DISPLAY.SPLASH_DURATION_MS);
@@ -33,10 +35,7 @@ function AppContent() {
 function App() {
   return (
     <Provider store={store}>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor={appTheme.colors.background}
-      />
+      <StatusBar hidden translucent barStyle="light-content" />
       <AppContent />
     </Provider>
   );

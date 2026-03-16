@@ -9,8 +9,9 @@ function escapeCsvValue(value) {
 }
 
 function createCsvContents(expenses = []) {
-  const headerRow = ['Merchant', 'Category', 'Amount', 'Time'];
+  const headerRow = ['Type', 'Merchant', 'Category', 'Amount', 'Time'];
   const dataRows = expenses.map((expense) => [
+    expense.transactionType === 'credit' ? 'Credit' : 'Debit',
     expense.merchantName,
     expense.category,
     expense.amountLabel,

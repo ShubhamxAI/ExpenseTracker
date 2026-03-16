@@ -4,6 +4,7 @@ import { ChartPieIcon } from 'react-native-heroicons/solid';
 import Svg, { Circle, G } from 'react-native-svg';
 
 import { appTheme } from '../theme/appTheme';
+import { getSignedExpenseAmount } from '../utils/expenseAmount';
 
 const PIE_CHART_SIZE = 156;
 const PIE_CHART_STROKE_WIDTH = 28;
@@ -18,12 +19,6 @@ const PIE_CHART_COLORS = [
   '#9B7BD8',
 ];
 
-function parseAmountLabel(amountLabel = '') {
-  const numericValue = Number.parseFloat(amountLabel.replace(/[^0-9.]/g, ''));
-
-  return Number.isNaN(numericValue) ? 0 : numericValue;
-}
-
 function formatCurrency(amount) {
   return `$${amount.toFixed(2)}`;
 }
@@ -31,8 +26,12 @@ function formatCurrency(amount) {
 function CategoryBarChart({ expenses = [] } = {}) {
   const categoryBreakdown = useMemo(() => {
     const totalsByCategory = expenses.reduce((categoryTotals, expense) => {
+      if (expense.transactionType === 'credit') {
+        return categoryTotals;
+      }
+
       const nextTotals = { ...categoryTotals };
-      const nextAmount = parseAmountLabel(expense.amountLabel);
+      const nextAmount = Math.abs(getSignedExpenseAmount(expense));
 
       nextTotals[expense.category] =
         (nextTotals[expense.category] || 0) + nextAmount;

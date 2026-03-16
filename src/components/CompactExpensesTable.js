@@ -11,6 +11,7 @@ function CompactExpensesTable({ expenses = [], maxBodyHeight } = {}) {
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <View style={styles.table}>
         <View style={[styles.row, styles.headerRow]}>
+          <Text style={[styles.headerCell, styles.typeCell]}>Type</Text>
           <Text style={[styles.headerCell, styles.merchantCell]}>Merchant</Text>
           <Text style={[styles.headerCell, styles.categoryCell]}>Category</Text>
           <Text style={[styles.headerCell, styles.amountCell]}>Amount</Text>
@@ -23,6 +24,12 @@ function CompactExpensesTable({ expenses = [], maxBodyHeight } = {}) {
         >
           {expenses.map((expense) => (
             <View key={expense.id} style={styles.row}>
+              <Text
+                style={[styles.bodyCell, styles.typeCell]}
+                numberOfLines={1}
+              >
+                {expense.transactionType === 'credit' ? 'Credit' : 'Debit'}
+              </Text>
               <Text
                 style={[styles.bodyCell, styles.merchantCell]}
                 numberOfLines={1}
@@ -89,6 +96,10 @@ const styles = StyleSheet.create({
     color: appTheme.colors.textSecondary,
     fontSize: 12,
     fontWeight: '500',
+  },
+  typeCell: {
+    width: 74,
+    paddingHorizontal: appTheme.spacing.sm,
   },
   merchantCell: {
     width: 132,

@@ -17,6 +17,7 @@ function ExpenseListItem({
   category,
   amountLabel,
   spentAt,
+  transactionType,
   onRemove,
 } = {}) {
   const translateX = useRef(new Animated.Value(0)).current;
@@ -100,12 +101,20 @@ function ExpenseListItem({
         <View style={styles.copyBlock}>
           <Text style={styles.merchantName}>{merchantName}</Text>
           <Text style={styles.metaText}>
+            {transactionType === 'credit' ? 'Credit · ' : ''}
             {category}
             {' · '}
             {spentAt}
           </Text>
         </View>
-        <Text style={styles.amountLabel}>{amountLabel}</Text>
+        <Text
+          style={[
+            styles.amountLabel,
+            transactionType === 'credit' ? styles.creditAmountLabel : null,
+          ]}
+        >
+          {amountLabel}
+        </Text>
       </Animated.View>
     </View>
   );
@@ -163,6 +172,9 @@ const styles = StyleSheet.create({
     color: appTheme.colors.textPrimary,
     fontSize: 16,
     fontWeight: '600',
+  },
+  creditAmountLabel: {
+    color: '#8FD6A6',
   },
 });
 

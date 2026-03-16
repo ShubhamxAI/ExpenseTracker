@@ -13,9 +13,14 @@
     "assetBundlePatterns": ["**/*"],
     "android": {
       "package": "com.expensetracker.app",
-      "permissions": ["READ_SMS"]
+      "permissions": ["READ_SMS", "POST_NOTIFICATIONS"]
     },
-    "plugins": ["expo-asset", "expo-sqlite", "expo-sharing"],
+    "plugins": [
+      "expo-asset",
+      "expo-sqlite",
+      "expo-sharing",
+      "expo-notifications"
+    ],
     "extra": {
       "eas": {
         "projectId": "f215acef-5341-4f21-bb1b-67eb4245c1dc"

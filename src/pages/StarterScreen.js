@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import StarterCard from '../components/StarterCard';
@@ -13,7 +13,7 @@ function StarterScreen() {
   const starterTheme = useSelector(selectStarterTheme);
 
   return (
-    <SafeAreaView
+    <View
       style={[
         styles.screen,
         { backgroundColor: starterTheme.colors.background },
@@ -31,7 +31,7 @@ function StarterScreen() {
           </Text>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 

@@ -1,9 +1,11 @@
 import * as SQLite from 'expo-sqlite';
 
+import { formatAmountLabel } from '../utils/expenseAmount';
+
 const EXPENSE_DATABASE_NAME = 'expense-tracker-starter.db';
 const EXPENSE_TABLE_NAME = 'starter_expenses';
 const BUDGET_TABLE_NAME = 'starter_budget';
-const EXPENSE_DATABASE_VERSION = 5;
+const EXPENSE_DATABASE_VERSION = 6;
 const LEGACY_SEED_COUNT = 4;
 
 const generatedExpenseMerchants = [
@@ -110,6 +112,8 @@ function createGeneratedExpense(baseIndex, displayOrder, idPrefix = 'expense') {
     category,
     amountLabel,
     spentAt,
+    transactionType: 'debit',
+    sourceMessage: null,
     displayOrder,
   };
 }
@@ -143,13 +147,17 @@ async function insertSeedExpenses(database, expensesToInsert) {
           category,
           amount_label,
           spent_at,
+          transaction_type,
+          source_message,
           display_order
-        ) VALUES (?, ?, ?, ?, ?, ?);`,
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
           expense.id,
           expense.merchantName,
           expense.category,
           expense.amountLabel,
           expense.spentAt,
+          expense.transactionType || 'debit',
+          expense.sourceMessage || null,
           expense.displayOrder,
         ),
       ),
@@ -167,6 +175,19 @@ async function setDatabaseVersion(database, nextVersion) {
   await database.execAsync(`PRAGMA user_version = ${nextVersion};`);
 }
 
+async function ensureExpenseColumn(database, columnName, definition) {
+  const tableColumns = await database.getAllAsync(
+    `PRAGMA table_info(${EXPENSE_TABLE_NAME});`,
+  );
+  const hasColumn = tableColumns.some((column) => column.name === columnName);
+
+  if (!hasColumn) {
+    await database.execAsync(
+      `ALTER TABLE ${EXPENSE_TABLE_NAME} ADD COLUMN ${columnName} ${definition};`,
+    );
+  }
+}
+
 async function initializeExpenseDatabase() {
   const database = await getExpenseDatabase();
 
@@ -177,9 +198,18 @@ async function initializeExpenseDatabase() {
       category TEXT NOT NULL,
       amount_label TEXT NOT NULL,
       spent_at TEXT NOT NULL,
+      transaction_type TEXT NOT NULL DEFAULT 'debit',
+      source_message TEXT,
       display_order INTEGER NOT NULL
     );`,
   );
+
+  await ensureExpenseColumn(
+    database,
+    'transaction_type',
+    "TEXT NOT NULL DEFAULT 'debit'",
+  );
+  await ensureExpenseColumn(database, 'source_message', 'TEXT');
 
   await database.execAsync(
     `CREATE TABLE IF NOT EXISTS ${BUDGET_TABLE_NAME} (
@@ -222,6 +252,8 @@ async function loadExpensesFromDatabase() {
       category,
       amount_label AS amountLabel,
       spent_at AS spentAt,
+      transaction_type AS transactionType,
+      source_message AS sourceMessage,
       display_order AS displayOrder
     FROM ${EXPENSE_TABLE_NAME}
     ORDER BY display_order ASC;`,
@@ -230,14 +262,20 @@ async function loadExpensesFromDatabase() {
   return storedExpenses;
 }
 
-async function addExpenseToDatabase({ merchantName, category, amount } = {}) {
+async function addExpenseToDatabase({
+  merchantName,
+  category,
+  amount,
+  transactionType = 'debit',
+  sourceMessage = null,
+} = {}) {
   const database = await initializeExpenseDatabase();
   const nextDisplayOrderRow = await database.getFirstAsync(
     `SELECT MAX(display_order) AS maxDisplayOrder FROM ${EXPENSE_TABLE_NAME};`,
   );
   const nextDisplayOrder =
     Number(nextDisplayOrderRow?.maxDisplayOrder || 0) + 1;
-  const normalizedAmountLabel = `$${Number(amount).toFixed(2)}`;
+  const normalizedAmountLabel = formatAmountLabel(amount, transactionType);
   const now = new Date();
   const nextExpense = {
     id: `expense-${now.getTime()}`,
@@ -245,6 +283,8 @@ async function addExpenseToDatabase({ merchantName, category, amount } = {}) {
     category: category.trim(),
     amountLabel: normalizedAmountLabel,
     spentAt: formatExpenseDateLabel(now),
+    transactionType,
+    sourceMessage,
     displayOrder: nextDisplayOrder,
   };
 
@@ -255,13 +295,17 @@ async function addExpenseToDatabase({ merchantName, category, amount } = {}) {
       category,
       amount_label,
       spent_at,
+      transaction_type,
+      source_message,
       display_order
-    ) VALUES (?, ?, ?, ?, ?, ?);`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
     nextExpense.id,
     nextExpense.merchantName,
     nextExpense.category,
     nextExpense.amountLabel,
     nextExpense.spentAt,
+    nextExpense.transactionType,
+    nextExpense.sourceMessage,
     nextExpense.displayOrder,
   );
 
